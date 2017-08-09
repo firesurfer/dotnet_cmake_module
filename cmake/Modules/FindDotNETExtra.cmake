@@ -254,9 +254,9 @@ else()
         set(ALL_COMPILER_ARGS
             ${_add_assemblies_COMPILER_ARGS}
             "-out:${OUTPUT_NAME}")
-        if(NOT ${_add_assemblies_REFERENCE_ASSEMBLIES})
+        if(NOT ${_add_assemblies_INCLUDE_ASSEMBLIES_DLL})
             set(EXT_ASSEMBLIES
-                "-r:${_add_assemblies_REFERENCE_ASSEMBLIES}")
+                "-r:${_add_assemblies_INCLUDE_ASSEMBLIES_DLL}")
         endif()
 
         set(AMENT_PREFIX_PATH_ADPATED $ENV{AMENT_PREFIX_PATH})
