@@ -17,7 +17,7 @@ function(add_assemblies _TARGET_NAME)
   cmake_parse_arguments(_add_assemblies
     "USE_DOTNET_CORE"
     "OUTPUT_DIR;OUTPUT_TYPE;OUTPUT_NAME"
-    "SOURCES;REFERENCE_ASSEMBLIES;INCLUDE_ASSEMBLIES_DLL;INCLUDE_ASSEMBLIES_NUGET;COMPILER_ARGS"
+    "SOURCES;INCLUDE_ASSEMBLIES_DLL;INCLUDE_ASSEMBLIES_NUGET;COMPILER_ARGS"
     ${ARGN}
   )
 
@@ -329,10 +329,10 @@ endif()
     )
   endif()
 
-  set_property(
-    TARGET ${_TARGET_NAME}
-    PROPERTY DEPENDENCIES_DLL ${_add_assemblies_INCLUDE_ASSEMBLIES_DLL}
-  )
+  #set_property(
+  #  TARGET ${_TARGET_NAME}
+  #  PROPERTY DEPENDENCIES_DLL ${_add_assemblies_INCLUDE_ASSEMBLIES_DLL}
+  #)
 
 endfunction()
 
