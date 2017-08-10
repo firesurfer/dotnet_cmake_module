@@ -12,6 +12,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+function(add_msbuild _TARGET_NAME)
+	cmake_parse_arguments(_add_msbuild
+    		"USE_DOTNET_CORE,EXECUTABLE"
+    		"CSPROJ"
+		"COMPILER_ARGS"
+    		${ARGN}
+  	)
+	set(PROJECT_FILE ${_add_msbuild_CSPROJ})
+	message(${PROJECT_FILE})
+	#/property:name=value
+	#AssemblyName
+	#OutDir
+	find_program(MSBUILD_EXE msbuild)
+	
+	add_custom_target(
+		 ${_TARGET_NAME} ALL
+		COMMAND ${MSBUILD_EXE} "/property:OutDir=${CMAKE_CURRENT_BINARY_DIR};AssemblyName=${_TARGET_NAME}" ${PROJECT_FILE}
+		VERBATIM
+	)
+	
+	if(EXECUTABLE)
+		set_property(
+        	TARGET
+            	${_TARGET_NAME}
+        	PROPERTY
+            	ASSEMBLIES_EXE_FILE
+                ${CMAKE_CURRENT_BINARY_DIR}/${_TARGET_NAME}.exe
+    	)
+	else()
+	    message("Assuming its a library")
+		set_property(
+        	TARGET
+            	${_TARGET_NAME}
+        	PROPERTY
+                ASSEMBLIES_DLL_FILE
+                ${CMAKE_CURRENT_BINARY_DIR}/${_TARGET_NAME}.dll
+    )
+	endif()
+
+endfunction()
+
 function(add_assemblies _TARGET_NAME)
 
   cmake_parse_arguments(_add_assemblies
@@ -271,7 +312,7 @@ else()
         if(OUTPUT_TYPE STREQUAL "Library")
             list(APPEND ALL_COMPILER_ARGS "-target:library")
             set(OUTPUT_NAME_EXT "${OUTPUT_NAME}.dll")
-            set(_assembly_dll_output_path "${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_NAME_EXT}")
+            set(_assembly_dll_output_path "${}/${OUTPUT_NAME_EXT}")
         else()
             list(APPEND ALL_COMPILER_ARGS "-target:exe")
             set(OUTPUT_NAME_EXT "${OUTPUT_NAME}.exe")
