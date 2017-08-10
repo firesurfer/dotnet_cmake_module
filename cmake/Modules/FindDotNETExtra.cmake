@@ -295,9 +295,9 @@ else()
         set(ALL_COMPILER_ARGS
             ${_add_assemblies_COMPILER_ARGS}
             "-out:${OUTPUT_NAME}")
-        if(NOT ${_add_assemblies_REFERENCE_ASSEMBLIES})
+        if(NOT ${_add_assemblies_INCLUDE_ASSEMBLIES_DLL})
             set(EXT_ASSEMBLIES
-                "-r:${_add_assemblies_REFERENCE_ASSEMBLIES}")
+                "-r:${_add_assemblies_INCLUDE_ASSEMBLIES_DLL}")
         endif()
 
         set(AMENT_PREFIX_PATH_ADPATED $ENV{AMENT_PREFIX_PATH})
@@ -312,7 +312,7 @@ else()
         if(OUTPUT_TYPE STREQUAL "Library")
             list(APPEND ALL_COMPILER_ARGS "-target:library")
             set(OUTPUT_NAME_EXT "${OUTPUT_NAME}.dll")
-            set(_assembly_dll_output_path "${}/${OUTPUT_NAME_EXT}")
+            set(_assembly_dll_output_path "${CMAKE_CURRENT_BINARY_DIR}/${OUTPUT_NAME_EXT}")
         else()
             list(APPEND ALL_COMPILER_ARGS "-target:exe")
             set(OUTPUT_NAME_EXT "${OUTPUT_NAME}.exe")
@@ -370,10 +370,10 @@ endif()
     )
   endif()
 
-  set_property(
-    TARGET ${_TARGET_NAME}
-    PROPERTY DEPENDENCIES_DLL ${_add_assemblies_INCLUDE_ASSEMBLIES_DLL}
-  )
+  #set_property(
+  #  TARGET ${_TARGET_NAME}
+  #  PROPERTY DEPENDENCIES_DLL ${_add_assemblies_INCLUDE_ASSEMBLIES_DLL}
+  #)
 
 endfunction()
 
@@ -452,6 +452,7 @@ function(install_assemblies _TARGET_NAME)
     endif()
 
 
+	
     if (__DLL_FILE)
         install(
             FILES
@@ -459,7 +460,16 @@ function(install_assemblies _TARGET_NAME)
             DESTINATION
                 bin
         )
+        if(NOT WIN32)
+            install(
+                FILES
+                    ${__DLL_FILE}
+                DESTINATION
+                    lib
+            )
+        endif()
     endif()
+    
 
     if (__FILES)
         install(
