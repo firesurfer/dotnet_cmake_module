@@ -14,7 +14,7 @@
 
 function(add_msbuild _TARGET_NAME)
 	cmake_parse_arguments(_add_msbuild
-    		"USE_DOTNET_CORE,EXECUTABLE"
+    		"USE_DOTNET_CORE;EXECUTABLE"
     		"CSPROJ"
 		"COMPILER_ARGS"
     		${ARGN}
@@ -32,7 +32,8 @@ function(add_msbuild _TARGET_NAME)
 		VERBATIM
 	)
 	
-	if(EXECUTABLE)
+	if(${_add_msbuild_EXECUTABLE})
+        message("Assuming its a executable")
 		set_property(
         	TARGET
             	${_TARGET_NAME}
