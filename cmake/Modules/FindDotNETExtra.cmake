@@ -21,14 +21,26 @@ function(add_msbuild _TARGET_NAME)
   	)
 	set(PROJECT_FILE ${_add_msbuild_CSPROJ})
 	message(${PROJECT_FILE})
-	#/property:name=value
-	#AssemblyName
-	#OutDir
+
+    
+    set(AMENT_PREFIX_PATH_ADPATED $ENV{AMENT_PREFIX_PATH})
+    
+    string(REPLACE ":" ";" AMENT_PREFIX_PATH_ADPATED ${AMENT_PREFIX_PATH_ADPATED})
+
+    foreach(PREFIX_PATH ${AMENT_PREFIX_PATH_ADPATED})
+        list(APPEND LIB_RCLCS_PATH ${PREFIX_PATH}/lib)
+        if(WIN32)
+            list(APPEND LIB_RCLCS_PATH ${PREFIX_PATH}/bin)
+        endif()
+        MESSAGE(${PREFIX_PATH})
+    endforeach()
+    
+
 	find_program(MSBUILD_EXE msbuild)
 	
 	add_custom_target(
 		 ${_TARGET_NAME} ALL
-		COMMAND ${MSBUILD_EXE} "/property:OutDir=${CMAKE_CURRENT_BINARY_DIR};AssemblyName=${_TARGET_NAME}" ${PROJECT_FILE}
+		COMMAND ${MSBUILD_EXE} "/property:OutDir=${CMAKE_CURRENT_BINARY_DIR};AssemblyName=${_TARGET_NAME}" "/p:ReferencePath=\"${LIB_RCLCS_PATH}\"" ${PROJECT_FILE}
 		VERBATIM
 	)
 	
