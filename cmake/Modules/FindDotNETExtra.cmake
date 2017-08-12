@@ -24,23 +24,27 @@ function(add_msbuild _TARGET_NAME)
 
     
     set(AMENT_PREFIX_PATH_ADPATED $ENV{AMENT_PREFIX_PATH})
-    
+	
+    message("Ament prefix path: " ${AMENT_PREFIX_PATH_ADPATED})
+	if(NOT WIN32)
     string(REPLACE ":" ";" AMENT_PREFIX_PATH_ADPATED ${AMENT_PREFIX_PATH_ADPATED})
-
+	endif()
     foreach(PREFIX_PATH ${AMENT_PREFIX_PATH_ADPATED})
-        list(APPEND LIB_RCLCS_PATH ${PREFIX_PATH}/lib)
+        list(APPEND LIB_RCLCS_PATH "/p:ReferencePath=${PREFIX_PATH}/lib")
         if(WIN32)
-            list(APPEND LIB_RCLCS_PATH ${PREFIX_PATH}/bin)
+            list(APPEND LIB_RCLCS_PATH "/p:ReferencePath=${PREFIX_PATH}/bin")
         endif()
-        MESSAGE(${PREFIX_PATH})
+        
     endforeach()
     
-
+	MESSAGE("Lib rclcs path: " "${LIB_RCLCS_PATH}")
+	set(LIB_RCLCS_PATH "${LIB_RCLCS_PATH}")
 	find_program(MSBUILD_EXE msbuild)
-	
+	set(BUILD_COMMAND  "${MSBUILD_EXE}" "/property:OutDir=${CMAKE_CURRENT_BINARY_DIR}" "/p:OutputPath=${CMAKE_CURRENT_BINARY_DIR}" "/p:AssemblyName=${_TARGET_NAME}" "/p:Platform=AnyCPU" ${LIB_RCLCS_PATH} "${PROJECT_FILE}")
+	message(${BUILD_COMMAND})
 	add_custom_target(
 		 ${_TARGET_NAME} ALL
-		COMMAND ${MSBUILD_EXE} "/property:OutDir=${CMAKE_CURRENT_BINARY_DIR};AssemblyName=${_TARGET_NAME}" "/p:ReferencePath=\"${LIB_RCLCS_PATH}\"" ${PROJECT_FILE}
+		COMMAND ${BUILD_COMMAND}
 		VERBATIM
 	)
 	
@@ -496,3 +500,4 @@ function(install_assemblies _TARGET_NAME)
         message(SEND_ERROR "install_assemblies: The target ${_TARGET_NAME} is not known in this scope.")
     endif ()
 endfunction()
+
