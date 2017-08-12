@@ -40,7 +40,7 @@ function(add_msbuild _TARGET_NAME)
 	
 	add_custom_target(
 		 ${_TARGET_NAME} ALL
-		COMMAND ${MSBUILD_EXE} "/property:OutDir=${CMAKE_CURRENT_BINARY_DIR};AssemblyName=${_TARGET_NAME}" "/p:ReferencePath=\"${LIB_RCLCS_PATH}\"" ${PROJECT_FILE}
+		COMMAND ${MSBUILD_EXE} "/property:OutDir=${CMAKE_CURRENT_BINARY_DIR}" "/p:OutputPath=${CMAKE_CURRENT_BINARY_DIR}" "/p:AssemblyName=${_TARGET_NAME}" "/p:ReferencePath=\"${LIB_RCLCS_PATH}\"" ${PROJECT_FILE}
 		VERBATIM
 	)
 	
