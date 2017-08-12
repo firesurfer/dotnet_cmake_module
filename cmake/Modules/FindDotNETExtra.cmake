@@ -500,4 +500,3 @@ function(install_assemblies _TARGET_NAME)
         message(SEND_ERROR "install_assemblies: The target ${_TARGET_NAME} is not known in this scope.")
     endif ()
 endfunction()
-
