@@ -40,7 +40,7 @@ function(add_msbuild _TARGET_NAME)
 	MESSAGE("Lib rclcs path: " "${LIB_RCLCS_PATH}")
 	set(LIB_RCLCS_PATH "${LIB_RCLCS_PATH}")
 	find_program(MSBUILD_EXE msbuild)
-	set(BUILD_COMMAND  "${MSBUILD_EXE}" "/property:OutDir=${CMAKE_CURRENT_BINARY_DIR}" "/p:OutputPath=${CMAKE_CURRENT_BINARY_DIR}" "/p:AssemblyName=${_TARGET_NAME}" "/p:Platform=AnyCPU" ${LIB_RCLCS_PATH} "${PROJECT_FILE}")
+	set(BUILD_COMMAND  "${MSBUILD_EXE}" "/property:OutDir=${CMAKE_CURRENT_BINARY_DIR}" "/p:OutputPath=${CMAKE_CURRENT_BINARY_DIR}" "/p:AssemblyName=${_TARGET_NAME}"  ${LIB_RCLCS_PATH} "/property:Platform=x64" "${PROJECT_FILE}")
 	message(${BUILD_COMMAND})
 	add_custom_target(
 		 ${_TARGET_NAME} ALL
